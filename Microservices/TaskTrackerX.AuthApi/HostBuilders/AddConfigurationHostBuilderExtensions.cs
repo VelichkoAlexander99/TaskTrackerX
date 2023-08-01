@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using TaskTrackerX.AuthApi.Models;
+using TaskTrackerX.AuthApi.Models.Options;
 
 namespace TaskTrackerX.AuthApi.HostBuilders
 {
@@ -7,12 +7,12 @@ namespace TaskTrackerX.AuthApi.HostBuilders
     {
         public static void AddConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOptions<JwtSettings>()
-                    .Bind(configuration.GetSection("JwtSettings"))
+            services.AddOptions<SettingOptions>()
+                    .Bind(configuration.GetSection("SettingOptions"))
                     .ValidateDataAnnotations();
 
-            services.Configure<JwtSettings>(
-                configuration.GetSection("JwtSettings"));
+            services.Configure<SettingOptions>(
+                configuration.GetSection("SettingOptions"));
         }
     }
 }

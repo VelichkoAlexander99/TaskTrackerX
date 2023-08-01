@@ -6,7 +6,7 @@ using TaskTrackerX.AuthApi.Models;
 
 namespace TaskTrackerX.AuthApi.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -15,17 +15,21 @@ namespace TaskTrackerX.AuthApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<User>()
+                .Ignore(t => t.RoleName);
         }
 
         public static void EnsureRolesCreated(IServiceProvider context)
         {
-            var roleManager = context.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = context.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
             if (!roleManager.Roles.Any())
             {
-                roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new IdentityRole("Manager")).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new IdentityRole("User")).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new IdentityRole<Guid>("Admin")).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new IdentityRole<Guid>("Manager")).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new IdentityRole<Guid>("User")).GetAwaiter().GetResult();
             }
         }
 

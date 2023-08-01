@@ -1,4 +1,4 @@
-﻿namespace TaskTrackerX.AuthApi.Models
+﻿namespace TaskTrackerX.AuthApi.Models.Options
 {
     public class JwtSettings
     {

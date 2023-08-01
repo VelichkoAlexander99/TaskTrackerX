@@ -25,13 +25,28 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URl_TaskApi}}/api/status",
+							"raw": "{{URl_TaskApi}}/api/status?Name=В&PageSize=25",
 							"host": [
 								"{{URl_TaskApi}}"
 							],
 							"path": [
 								"api",
 								"status"
+							],
+							"query": [
+								{
+									"key": "Name",
+									"value": "В"
+								},
+								{
+									"key": "PageNumber",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "PageSize",
+									"value": "25"
+								}
 							]
 						}
 					},
@@ -191,13 +206,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URl_TaskApi}}/api/exercise",
+							"raw": "{{URl_TaskApi}}/api/exercise?ExerciseStatusId&CreatedByUserId&AssignedToUserId",
 							"host": [
 								"{{URl_TaskApi}}"
 							],
 							"path": [
 								"api",
 								"exercise"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "PageSize",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "ExerciseStatusId",
+									"value": null
+								},
+								{
+									"key": "CreatedByUserId",
+									"value": null
+								},
+								{
+									"key": "AssignedToUserId",
+									"value": null
+								}
 							]
 						}
 					},
@@ -435,7 +474,7 @@
 		},
 		{
 			"key": "exerciseId",
-			"value": "6c467a4c-83d1-4e3b-bd86-959ff8b70ca6"
+			"value": "2cceb810-e3d5-410a-8b58-5aa57586ebf2"
 		}
 	]
 }

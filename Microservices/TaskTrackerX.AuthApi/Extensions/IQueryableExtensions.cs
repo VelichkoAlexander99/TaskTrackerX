@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskTrackerX.TaskApi.Models.Query;
+using TaskTrackerX.AuthApi.Models.Query;
 
-namespace TaskTrackerX.TaskApi.Extensions
+namespace TaskTrackerX.AuthApi.Extensions
 {
     public static class IQueryableExtensions
     {
@@ -39,5 +39,4 @@ namespace TaskTrackerX.TaskApi.Extensions
             };
         }
     }
-
 }

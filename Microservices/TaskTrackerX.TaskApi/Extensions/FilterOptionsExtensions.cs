@@ -5,9 +5,9 @@ using TaskTrackerX.TaskApi.Models.Options;
 using System.IO;
 using TaskTrackerX.TaskApi.DTOs.Incoming;
 
-namespace TaskTrackerX.TaskApi.Services
+namespace TaskTrackerX.TaskApi.Extensions
 {
-    public static class FilterOptionsService
+    public static class FilterOptionsExtensions
     {
         public static FilterOptions<Status> ConvertToFilterOptions(this StatusParametersDto parameters, IOptions<SettingOptions> options)
         {
@@ -49,7 +49,7 @@ namespace TaskTrackerX.TaskApi.Services
             filterOptions.PageSize = parameters.PageSize;
 
             if (parameters.PageSize < 1)
-                filterOptions.PageSize = 1;
+                filterOptions.PageSize = options.Value.PaginationSettings.MaxPageSize;
 
             if (parameters.PageSize > options.Value.PaginationSettings.MaxPageSize)
                 filterOptions.PageSize = options.Value.PaginationSettings.MaxPageSize;

@@ -8,7 +8,7 @@ namespace TaskTrackerX.AuthApi.MappingProfiles
     {
         public RoleProfile()
         {
-            CreateMap<IdentityRole, RoleDto>();
+            CreateMap<IdentityRole<Guid>, RoleDto>();
         }
     }
 }

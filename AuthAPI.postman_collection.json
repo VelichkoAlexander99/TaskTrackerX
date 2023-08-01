@@ -174,13 +174,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URl_AuthApi}}/api/roles",
+							"raw": "{{URl_AuthApi}}/api/users/roles",
 							"host": [
 								"{{URl_AuthApi}}"
 							],
 							"path": [
 								"api",
+								"users",
 								"roles"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "PageSize",
+									"value": "2",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -209,6 +222,28 @@
 							"path": [
 								"api",
 								"users"
+							],
+							"query": [
+								{
+									"key": "Name",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "Login",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "PageNumber",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "PageSize",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -272,7 +307,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"string\",\r\n  \"login\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"raw": "{\r\n  \"name\": \"string\",\r\n  \"login\": \"string\",\r\n  \"password\": \"string123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -307,8 +342,17 @@
 						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"roleId\": \"736b6e5a-8776-4637-80cc-b9fd5cd595a9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{URl_AuthApi}}/api/users/{{userId}}/roles",
+							"raw": "{{URl_AuthApi}}/api/users/{{userId}}/set-role",
 							"host": [
 								"{{URl_AuthApi}}"
 							],
@@ -316,7 +360,7 @@
 								"api",
 								"users",
 								"{{userId}}",
-								"roles"
+								"set-role"
 							]
 						}
 					},
@@ -339,7 +383,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"string\",\r\n  \"login\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"raw": "{\r\n  \"name\": \"string\",\r\n  \"login\": \"string\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -415,7 +459,7 @@
 	"variable": [
 		{
 			"key": "userId",
-			"value": "9427dc7c-903b-401a-9dda-096d68f7b151",
+			"value": "17a40213-1adf-4e15-a525-c11ccbb986b8",
 			"type": "string"
 		}
 	]

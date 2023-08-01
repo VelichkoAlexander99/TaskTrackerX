@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Xml.Linq;
 using TaskTrackerX.AuthApi.Models;
+using TaskTrackerX.AuthApi.Models.Options;
 
 namespace TaskTrackerX.AuthApi.Services.JwtTokenGenerator
 {
@@ -12,16 +13,16 @@ namespace TaskTrackerX.AuthApi.Services.JwtTokenGenerator
     {
         private readonly JwtSettings _jwtSettings;
 
-        public JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
+        public JwtTokenGenerator(IOptions<SettingOptions> jwtSettings)
         {
-            _jwtSettings = jwtSettings.Value;
+            _jwtSettings = jwtSettings.Value.JwtSettings;
         }
 
         public string GenerateToken(User user, IEnumerable<string> userRoles)
         {
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
             };
 

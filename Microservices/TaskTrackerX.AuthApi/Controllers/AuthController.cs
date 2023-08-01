@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Net;
 using System.Security.Claims;
 using TaskTrackerX.AuthApi.DTOs.Incoming;
+using TaskTrackerX.AuthApi.DTOs.Outgoing;
+using TaskTrackerX.AuthApi.Extensions;
 using TaskTrackerX.AuthApi.Models;
 using TaskTrackerX.AuthApi.Services;
-using TaskTrackerX.AuthApi.Services.AuthService;
-using TaskTrackerX.AuthApi.Services.UserService;
+using TaskTrackerX.AuthApi.Services.JwtTokenGenerator;
 
 namespace TaskTrackerX.AuthApi.Controllers
 {
@@ -14,27 +18,38 @@ namespace TaskTrackerX.AuthApi.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        private readonly IUserService _userService;
+        private readonly UserManager<User> _userManager;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IMapper _mapper;
 
         public AuthController(
-            IAuthService authService, 
-            IUserService userService)
+            UserManager<User> userManager,
+            IJwtTokenGenerator jwtTokenGenerator,
+            IMapper mapper)
         {
-            _authService = authService;
-            _userService = userService;
+            _userManager = userManager;
+            _jwtTokenGenerator = jwtTokenGenerator;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var result = await _authService.AuthenticateAsync(loginDto);
-            
-            return new ObjectResult(result)
+            if (loginDto == null)
+                throw new ArgumentNullException(nameof(loginDto));
+
+            var user = await _userManager.FindByNameAsync(loginDto.Login);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+                return this.ToApiResponseError(401, errors: ErrorDescriber.InvalidUserLoginOrPassword());
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _jwtTokenGenerator.GenerateToken(user, roles);
+
+            return this.ToApiResponse(new AccessTokenDto
             {
-                StatusCode = result.StatusCode
-            };
+                Token = accessToken
+            });
         }
 
         [HttpGet("current-user")]
@@ -42,38 +57,60 @@ namespace TaskTrackerX.AuthApi.Controllers
         public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _userService.GetUserByIdAsync(userId);
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
 
-            return new ObjectResult(result)
-            {
-                StatusCode = result.StatusCode
-            };
+            var result = await _userManager.FindByIdAsync(userId);
+            if (result == null)
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
+
+            return this.ToApiResponse(_mapper.Map<UserDto>(result));
         }
 
         [HttpPost("change-password")]
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _authService.ChangePasswordAsync(userId, changePasswordDto);
+            if (changePasswordDto == null)
+                throw new ArgumentNullException(nameof(changePasswordDto));
 
-            return new ObjectResult(result)
-            { 
-                StatusCode = result.StatusCode
-            };
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
+
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+
+            return result.Succeeded ? 
+                this.ToApiResponse(true) :
+                this.ToApiResponseError(errors: result.Errors.ConvertToErrorInfo());
         }
 
         [HttpPost("change-name")]
         [Authorize]
         public async Task<IActionResult> ChangeName(ChangeNameDto changeNameDto)
         {
+            if (changeNameDto == null)
+                throw new ArgumentNullException(nameof(changeNameDto));
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _authService.ChangeNameAsync(userId, changeNameDto);
-            
-            return new ObjectResult(result)
-            {
-                StatusCode = result.StatusCode
-            };
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
+
+            user.Name = changeNameDto.NewName;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded ?
+                this.ToApiResponse(true) :
+                this.ToApiResponseError(errors: result.Errors.ConvertToErrorInfo());
         }
     }
 }

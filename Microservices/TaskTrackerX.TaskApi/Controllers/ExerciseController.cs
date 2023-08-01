@@ -107,10 +107,10 @@ namespace TaskTrackerX.TaskApi.Controllers
             exerciseUpdate.ExerciseStatusId = exercireStatusDto.StatusId;
 
             var updateResult = await _exerciseManager.UpdateAsync(exerciseUpdate);
-            if (!updateResult.Succeeded)
-                return this.ToApiResponseError(errors: updateResult.Errors.ToArray());
 
-            return this.ToApiResponse(_mapper.Map<ExerciseDto>(exerciseUpdate));
+            return updateResult.Succeeded ? 
+                this.ToApiResponse(_mapper.Map<ExerciseDto>(exerciseUpdate)) :
+                this.ToApiResponseError(errors: updateResult.Errors.ToArray());
         }
 
         [HttpPost]
@@ -130,11 +130,11 @@ namespace TaskTrackerX.TaskApi.Controllers
 
             statusCreated.CreatedByUserId = convert;
 
-            var result = await _exerciseManager.CreateAsync(statusCreated);
-            if (!result.Succeeded)
-                return this.ToApiResponseError(errors: result.Errors.ToArray());
+            var createdResult = await _exerciseManager.CreateAsync(statusCreated);
 
-            return this.ToApiResponse(_mapper.Map<ExerciseDto>(statusCreated));
+            return createdResult.Succeeded ? 
+                this.ToApiResponse(_mapper.Map<ExerciseDto>(statusCreated)) :
+                this.ToApiResponseError(errors: createdResult.Errors.ToArray());
         }
 
         [HttpPut]
@@ -151,20 +151,24 @@ namespace TaskTrackerX.TaskApi.Controllers
 
             if (updateDTO.Description != null)
                 exerciseUpdate.Description = updateDTO.Description;
+
             if (updateDTO.Subject != null)
                 exerciseUpdate.Subject = updateDTO.Subject;
+
             if (updateDTO.ReceivedDate != null)
                 exerciseUpdate.ReceivedDate = updateDTO.ReceivedDate.Value;
+
             if (updateDTO.Deadline != null)
                 exerciseUpdate.Deadline = updateDTO.Deadline.Value;
+
             if (updateDTO.ExerciseStatusId != null)
                 exerciseUpdate.ExerciseStatusId = updateDTO.ExerciseStatusId.Value;
 
             var updateResult = await _exerciseManager.UpdateAsync(exerciseUpdate);
-            if (!updateResult.Succeeded)
-                return this.ToApiResponseError(errors: updateResult.Errors.ToArray());
 
-            return this.ToApiResponse(_mapper.Map<ExerciseDto>(exerciseUpdate));
+            return updateResult.Succeeded ? 
+                this.ToApiResponse(_mapper.Map<ExerciseDto>(exerciseUpdate)) :
+                this.ToApiResponseError(errors: updateResult.Errors.ToArray());
         }
 
         [HttpDelete]
@@ -176,11 +180,11 @@ namespace TaskTrackerX.TaskApi.Controllers
             if (exercise == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidExercise());
 
-            var deleteExercise = await _exerciseManager.DeleteAsync(exercise);
-            if (!deleteExercise.Succeeded)
-                return this.ToApiResponseError(errors: deleteExercise.Errors.ToArray());
+            var deleteResult = await _exerciseManager.DeleteAsync(exercise);
 
-            return this.ToApiResponse(true);
+            return deleteResult.Succeeded ?
+                this.ToApiResponse(true) :
+                this.ToApiResponseError(errors: deleteResult.Errors.ToArray());
         }
     }
 }

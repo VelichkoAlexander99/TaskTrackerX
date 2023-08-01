@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using TaskTrackerX.AuthApi.Models;
-using TaskTrackerX.AuthApi.Services.AuthService;
+﻿using TaskTrackerX.AuthApi.Services;
 using TaskTrackerX.AuthApi.Services.JwtTokenGenerator;
-using TaskTrackerX.AuthApi.Services.RoleService;
-using TaskTrackerX.AuthApi.Services.UserService;
 
 namespace TaskTrackerX.AuthApi.HostBuilders
 {
@@ -16,9 +10,7 @@ namespace TaskTrackerX.AuthApi.HostBuilders
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<UserWithRoleService>();
         }
     }
 }

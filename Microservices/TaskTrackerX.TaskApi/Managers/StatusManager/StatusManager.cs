@@ -45,10 +45,8 @@ namespace TaskTrackerX.TaskApi.Managers.StatusManager
                 throw new ArgumentNullException(nameof(status));
 
             var result = await _statusValidator.ValidateAsync(this, status);
-            if (!result.Succeeded)
-                return result;
 
-            return await _statusStore.CreateAsync(status);
+            return result.Succeeded ? await _statusStore.CreateAsync(status) : result;
         }
 
         public async Task<Result> UpdateAsync(Status status)
@@ -57,10 +55,8 @@ namespace TaskTrackerX.TaskApi.Managers.StatusManager
                 throw new ArgumentNullException(nameof(status));
 
             var result = await _statusValidator.ValidateAsync(this, status);
-            if (!result.Succeeded)
-                return result;
-
-            return await _statusStore.UpdateAsync(status);
+            
+            return result.Succeeded ? await _statusStore.UpdateAsync(status) : result;
         }
 
         public async Task<Result> DeleteAsync(Status status)

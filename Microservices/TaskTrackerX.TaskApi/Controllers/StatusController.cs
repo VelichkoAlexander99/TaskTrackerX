@@ -66,11 +66,11 @@ namespace TaskTrackerX.TaskApi.Controllers
 
             var statusCreated = _mapper.Map<Status>(createDTO);
 
-            var result = await _statusManager.CreateAsync(statusCreated);
-            if (!result.Succeeded)
-                return this.ToApiResponseError(errors: result.Errors.ToArray());
+            var createdResult = await _statusManager.CreateAsync(statusCreated);
 
-            return this.ToApiResponse(_mapper.Map<StatusDto>(statusCreated));
+            return createdResult.Succeeded ? 
+                this.ToApiResponse(_mapper.Map<StatusDto>(statusCreated), 201) :
+                this.ToApiResponseError(errors: createdResult.Errors.ToArray());
         }
 
         [HttpPut]
@@ -88,10 +88,10 @@ namespace TaskTrackerX.TaskApi.Controllers
             statusUpdate.Name = updateDTO.Name;
 
             var updateResult = await _statusManager.UpdateAsync(statusUpdate);
-            if (!updateResult.Succeeded)
-                return this.ToApiResponseError(errors: updateResult.Errors.ToArray());
 
-            return this.ToApiResponse(_mapper.Map<StatusDto>(statusUpdate));
+            return updateResult.Succeeded ?
+                this.ToApiResponse(_mapper.Map<StatusDto>(statusUpdate)) :
+                this.ToApiResponseError(errors: updateResult.Errors.ToArray());
         }
 
         [HttpDelete]
@@ -103,11 +103,11 @@ namespace TaskTrackerX.TaskApi.Controllers
             if (status == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidStatus());
 
-            var deleteStatus = await _statusManager.DeleteAsync(status);
-            if (!deleteStatus.Succeeded)
-                return this.ToApiResponseError(errors: deleteStatus.Errors.ToArray());
+            var deleteResult = await _statusManager.DeleteAsync(status);
 
-            return this.ToApiResponse(true);
+            return deleteResult.Succeeded ? 
+                this.ToApiResponse(true) :
+                this.ToApiResponseError(errors: deleteResult.Errors.ToArray());
         }
     }
 }

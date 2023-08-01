@@ -9,7 +9,7 @@ namespace TaskTrackerX.AuthApi.HostBuilders
     {
         public static void AddIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = false;

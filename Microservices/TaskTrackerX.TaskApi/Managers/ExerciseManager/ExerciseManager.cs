@@ -37,10 +37,8 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
                 throw new ArgumentNullException(nameof(exercise));
 
             var result = await _exerciseValidator.ValidateAsync(exercise);
-            if (!result.Succeeded)
-                return result;
 
-            return await _exerciseStore.CreateAsync(exercise);
+            return result.Succeeded ? await _exerciseStore.CreateAsync(exercise) : result;
         }
 
         public async Task<Result> UpdateAsync(Exercise exercise)
@@ -49,10 +47,8 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
                 throw new ArgumentNullException(nameof(exercise));
 
             var result = await _exerciseValidator.ValidateAsync(exercise);
-            if (!result.Succeeded)
-                return result;
 
-            return await _exerciseStore.UpdateAsync(exercise);
+            return result.Succeeded ? await _exerciseStore.UpdateAsync(exercise) : result;
         }
 
         public async Task<Result> DeleteAsync(Exercise exercise)

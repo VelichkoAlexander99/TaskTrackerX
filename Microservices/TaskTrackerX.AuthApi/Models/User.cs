@@ -2,8 +2,10 @@
 
 namespace TaskTrackerX.AuthApi.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
+
+        public string? RoleName { get; set; }
     }
 }
