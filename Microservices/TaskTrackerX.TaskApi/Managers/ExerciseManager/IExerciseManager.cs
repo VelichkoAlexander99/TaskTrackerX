@@ -1,11 +1,13 @@
-﻿using TaskTrackerX.TaskApi.Models;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using TaskTrackerX.TaskApi.DTOs.Incoming;
+using TaskTrackerX.TaskApi.Models;
+using TaskTrackerX.TaskApi.Models.Query;
 
 namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
 {
     public interface IExerciseManager
     {
-        Task<IEnumerable<Exercise>> GetListAsync();
-        Task<IEnumerable<Exercise>> GetByAssignedUserIdAsync(Guid userId);
+        Task<PagedResult<Exercise>> GetListAsync(FilterOptions<Exercise> filterOptions);
         Task<Exercise?> FindByIdAsync(Guid id);
         Task<Result> CreateAsync(Exercise exercise);
         Task<Result> UpdateAsync(Exercise exercise);

@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.ComponentModel;
+using System.IO;
 using System.Security.Claims;
 using TaskTrackerX.TaskApi.DTOs.Incoming;
 using TaskTrackerX.TaskApi.DTOs.Outgoing;
 using TaskTrackerX.TaskApi.Extensions;
 using TaskTrackerX.TaskApi.Managers.ExerciseManager;
 using TaskTrackerX.TaskApi.Models;
+using TaskTrackerX.TaskApi.Models.Options;
+using TaskTrackerX.TaskApi.Models.Query;
 using TaskTrackerX.TaskApi.Services;
 using TaskTrackerX.TaskApi.Services.UserService;
 
@@ -18,23 +22,27 @@ namespace TaskTrackerX.TaskApi.Controllers
     public class ExerciseController : ControllerBase
     {
         private readonly IExerciseManager _exerciseManager;
+        private readonly IOptions<SettingOptions> _options;
         private readonly IMapper _mapper;
 
         public ExerciseController(
             IExerciseManager exerciseManager,
+            IOptions<SettingOptions> options,
             IMapper mapper)
         {
             _exerciseManager = exerciseManager;
+            this._options = options;
             _mapper = mapper;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> GetListAsync()
+        public async Task<IActionResult> GetListAsync([FromQuery] ExerciseParametersDto filterOptions)
         {
-            var listResult = await _exerciseManager.GetListAsync();
+            var listResult = await _exerciseManager.GetListAsync(
+                filterOptions.ConvertToFilterOptions(_options));
 
-            return this.ToApiResponse(_mapper.Map<IEnumerable<ExerciseDto>>(listResult));
+            return this.ToApiResponse(_mapper.Map<PagedResult<ExerciseDto>>(listResult));
         }
 
         [HttpGet]
@@ -59,16 +67,20 @@ namespace TaskTrackerX.TaskApi.Controllers
         [HttpGet]
         [Route("current-exercise")]
         [Authorize(Roles = "Admin, Moderator, User")]
-        public async Task<IActionResult> GetByTokenAsync()
+        public async Task<IActionResult> GetByTokenAsync([FromQuery] QueryParametersDto queryParameters)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId));
 
             var convert = Guid.Parse(userId);
-            var listResult = await _exerciseManager.GetByAssignedUserIdAsync(convert);
 
-            return this.ToApiResponse(_mapper.Map<IEnumerable<ExerciseDto>>(listResult));
+            return await GetListAsync(new ExerciseParametersDto()
+            {
+                PageNumber = queryParameters.PageNumber,
+                PageSize = queryParameters.PageSize,
+                AssignedToUserId = convert
+            });
         }
 
         [HttpPut]

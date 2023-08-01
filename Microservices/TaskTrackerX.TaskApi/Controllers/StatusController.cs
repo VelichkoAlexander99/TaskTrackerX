@@ -11,6 +11,9 @@ using TaskTrackerX.TaskApi.DTOs.Outgoing;
 using TaskTrackerX.TaskApi.Managers.StatusManager;
 using TaskTrackerX.TaskApi.Models;
 using TaskTrackerX.TaskApi.Services;
+using TaskTrackerX.TaskApi.Models.Query;
+using Microsoft.Extensions.Options;
+using TaskTrackerX.TaskApi.Models.Options;
 
 namespace TaskTrackerX.TaskApi.Controllers
 {
@@ -19,23 +22,27 @@ namespace TaskTrackerX.TaskApi.Controllers
     public class StatusController : ControllerBase
     {
         private readonly IStatusManager _statusManager;
+        private readonly IOptions<SettingOptions> _options;
         private readonly IMapper _mapper;
 
         public StatusController(
             IStatusManager statusManager,
+            IOptions<SettingOptions> options,
             IMapper mapper)
         {
             _statusManager = statusManager;
+            this._options = options;
             _mapper = mapper;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetListAsync()
+        public async Task<IActionResult> GetListAsync([FromQuery] StatusParametersDto filterOptions)
         {
-            var listResult = await _statusManager.GetListAsync();
+            var listResult = await _statusManager.GetListAsync(
+                filterOptions.ConvertToFilterOptions(_options));
 
-            return this.ToApiResponse(_mapper.Map<IEnumerable<StatusDto>>(listResult));
+            return this.ToApiResponse(_mapper.Map<PagedResult<StatusDto>>(listResult));
         }
 
         [HttpGet]
@@ -52,7 +59,7 @@ namespace TaskTrackerX.TaskApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateAsync([FromBody] StatusCreateUpdateDTO createDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] StatusCreateUpdateDto createDTO)
         {
             if (createDTO == null)
                 throw new ArgumentNullException(nameof(createDTO));
@@ -69,7 +76,7 @@ namespace TaskTrackerX.TaskApi.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] StatusCreateUpdateDTO updateDTO)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] StatusCreateUpdateDto updateDTO)
         {
             if (updateDTO == null)
                 throw new ArgumentNullException(nameof(updateDTO));

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskTrackerX.TaskApi.Data.Stores.StatusStore;
+using TaskTrackerX.TaskApi.Extensions;
 using TaskTrackerX.TaskApi.Models;
+using TaskTrackerX.TaskApi.Models.Query;
 using TaskTrackerX.TaskApi.Validator.StatusValidator;
 
 namespace TaskTrackerX.TaskApi.Managers.StatusManager
@@ -18,10 +20,10 @@ namespace TaskTrackerX.TaskApi.Managers.StatusManager
             _statusValidator = statusValidator;
         }
 
-        public async Task<IEnumerable<Status>> GetListAsync()
+        public async Task<PagedResult<Status>> GetListAsync(FilterOptions<Status> filterOptions)
         {
             return await _statusStore.Status
-                .ToListAsync();
+                .GetPagedAsync(filterOptions);
         }
 
         public async Task<Status?> FindByIdAsync(Guid id)

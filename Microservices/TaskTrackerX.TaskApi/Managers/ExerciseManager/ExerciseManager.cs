@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskTrackerX.TaskApi.Data.Stores.ExerciseStore;
+using TaskTrackerX.TaskApi.Extensions;
 using TaskTrackerX.TaskApi.Models;
+using TaskTrackerX.TaskApi.Models.Query;
 using TaskTrackerX.TaskApi.Validator.ExerciseValidator;
 
 namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
@@ -18,22 +20,15 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
             _exerciseValidator = exerciseValidator;
         }
 
-        public async Task<IEnumerable<Exercise>> GetListAsync()
+        public async Task<PagedResult<Exercise>> GetListAsync(FilterOptions<Exercise> filterOptions)
         {
             return await _exerciseStore.Exercise
-                .ToListAsync();
+                .GetPagedAsync(filterOptions);
         }
 
         public Task<Exercise?> FindByIdAsync(Guid id)
         {
             return _exerciseStore.FindByIdAsync(id);
-        }
-
-        public async Task<IEnumerable<Exercise>> GetByAssignedUserIdAsync(Guid userId)
-        {
-            return await _exerciseStore.Exercise
-                .Where(e => e.AssignedToUserId.Equals(userId))
-                .ToListAsync();
         }
 
         public async Task<Result> CreateAsync(Exercise exercise)

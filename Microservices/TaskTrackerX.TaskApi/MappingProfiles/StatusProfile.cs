@@ -10,7 +10,7 @@ namespace TaskTrackerX.TaskApi.MappingProfiles
         public StatusProfile()
         {
             CreateMap<Status, StatusDto>();
-            CreateMap<StatusCreateUpdateDTO, Status>();
+            CreateMap<StatusCreateUpdateDto, Status>();
         }
     }
 }
