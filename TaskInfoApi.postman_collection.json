@@ -1,0 +1,441 @@
+{
+	"info": {
+		"_postman_id": "73f7846f-8aa1-496f-ac73-2b83d5b4fad4",
+		"name": "TaskInfoApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6371736"
+	},
+	"item": [
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "Get all status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/status",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get status by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/status/{{statusId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/status",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/status/{{statusId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/status/{{statusId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercise",
+			"item": [
+				{
+					"name": "Get all exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all exercise by token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/current-exercise",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								"current-exercise"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get exercise by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/{{exerciseId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								"{{exerciseId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"string\",\r\n  \"subject\": \"string\",\r\n  \"receivedDate\": \"2023-07-30T18:38:21.309Z\",\r\n  \"deadline\": \"2023-07-31T18:38:21.309Z\",\r\n  \"exerciseStatusId\": \"1c5ba243-6bda-4658-82b3-689ccd5d16f6\",\r\n  \"assignedToUserId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"g\",\r\n  \"subject\": \"s33333333333333333333333333333333333333333333333333333333333333g\",\r\n  \"receivedDate\": \"2023-09-01T10:31:52.053Z\",\r\n  \"deadline\": \"2023-08-01T10:31:52.053Z\",\r\n  \"exerciseStatusId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/{{exerciseId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								"{{exerciseId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change status exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"statusId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/{{exerciseId}}/change-status",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								"{{exerciseId}}",
+								"change-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URl_TaskApi}}/api/exercise/{{exerciseId}}",
+							"host": [
+								"{{URl_TaskApi}}"
+							],
+							"path": [
+								"api",
+								"exercise",
+								"{{exerciseId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "statusId",
+			"value": "c8b0cc95-3d8e-4703-9b9e-ad2d80d57210"
+		},
+		{
+			"key": "exerciseId",
+			"value": "6c467a4c-83d1-4e3b-bd86-959ff8b70ca6"
+		}
+	]
+}
