@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
+using TaskTrackerX.TaskApi;
 using TaskTrackerX.TaskApi.HostBuilders;
-using TaskTrackerX.TaskApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

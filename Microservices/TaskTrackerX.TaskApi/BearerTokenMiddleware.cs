@@ -1,4 +1,4 @@
-﻿namespace TaskTrackerX.TaskApi.Middleware
+﻿namespace TaskTrackerX.TaskApi
 {
     public class BearerTokenMiddleware
     {

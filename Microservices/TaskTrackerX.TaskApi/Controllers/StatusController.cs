@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Data;
 using System.Net;
-using TaskTrackerX.TaskApi.Data.Stores;
+using TaskTrackerX.TaskApi.Extensions;
 using TaskTrackerX.TaskApi.DTOs.Incoming;
 using TaskTrackerX.TaskApi.DTOs.Outgoing;
 using TaskTrackerX.TaskApi.Managers.StatusManager;
@@ -30,31 +31,28 @@ namespace TaskTrackerX.TaskApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<IEnumerable<StatusDto>>>> GetListAsync()
+        public async Task<IActionResult> GetListAsync()
         {
             var listResult = await _statusManager.GetListAsync();
 
-            return new ApiResponse<IEnumerable<StatusDto>>(
-                _mapper.Map<IEnumerable<StatusDto>>(listResult)); 
+            return this.ToApiResponse(_mapper.Map<IEnumerable<StatusDto>>(listResult));
         }
 
         [HttpGet]
         [Route("{id}")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<StatusDto>>> GetByIdAsync(Guid id)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var result = await _statusManager.FindByIdAsync(id);
             if (result == null)
-                return new ApiResponse<StatusDto>(
-                    errors: ErrorDescriber.InvalidStatus());
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidStatus());
 
-            return new ApiResponse<StatusDto>(
-                _mapper.Map<StatusDto>(result));
+            return this.ToApiResponse(_mapper.Map<StatusDto>(result));
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<StatusDto>>> CreateAsync([FromBody] StatusCreateUpdateDTO createDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] StatusCreateUpdateDTO createDTO)
         {
             if (createDTO == null)
                 throw new ArgumentNullException(nameof(createDTO));
@@ -63,49 +61,46 @@ namespace TaskTrackerX.TaskApi.Controllers
 
             var result = await _statusManager.CreateAsync(statusCreated);
             if (!result.Succeeded)
-                return new ApiResponse<StatusDto>(result.Errors);
+                return this.ToApiResponseError(errors: result.Errors.ToArray());
 
-            return new ApiResponse<StatusDto>(
-                _mapper.Map<StatusDto>(statusCreated));
+            return this.ToApiResponse(_mapper.Map<StatusDto>(statusCreated));
         }
 
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ApiResponse<StatusDto>> UpdateAsync(Guid id, [FromBody] StatusCreateUpdateDTO updateDTO)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] StatusCreateUpdateDTO updateDTO)
         {
             if (updateDTO == null)
                 throw new ArgumentNullException(nameof(updateDTO));
 
             var statusUpdate = await _statusManager.FindByIdAsync(id);
             if (statusUpdate == null)
-                return new ApiResponse<StatusDto>(
-                    errors: ErrorDescriber.InvalidStatus());
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidStatus());
 
             statusUpdate.Name = updateDTO.Name;
 
             var updateResult = await _statusManager.UpdateAsync(statusUpdate);
             if (!updateResult.Succeeded)
-                return new ApiResponse<StatusDto>(updateResult.Errors);
+                return this.ToApiResponseError(errors: updateResult.Errors.ToArray());
 
-            return new ApiResponse<StatusDto>(
-                _mapper.Map<StatusDto>(statusUpdate));
+            return this.ToApiResponse(_mapper.Map<StatusDto>(statusUpdate));
         }
 
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<bool>>> DeleteAsync(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var status = await _statusManager.FindByIdAsync(id);
             if (status == null)
-                return new ApiResponse<bool>(errors: ErrorDescriber.InvalidStatus());
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidStatus());
 
             var deleteStatus = await _statusManager.DeleteAsync(status);
             if (!deleteStatus.Succeeded)
-                return new ApiResponse<bool>(deleteStatus.Errors);
+                return this.ToApiResponseError(errors: deleteStatus.Errors.ToArray());
 
-            return new ApiResponse<bool>(true);
+            return this.ToApiResponse(true);
         }
     }
 }
