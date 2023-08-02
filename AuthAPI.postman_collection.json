@@ -226,22 +226,22 @@
 							"query": [
 								{
 									"key": "Name",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "Login",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "PageNumber",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "PageSize",
-									"value": null,
+									"value": "1",
 									"disabled": true
 								}
 							]

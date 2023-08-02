@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Net;
 using System.Security.Claims;
@@ -19,15 +20,18 @@ namespace TaskTrackerX.AuthApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly UserWithRoleService _customService;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
         public AuthController(
             UserManager<User> userManager,
+            UserWithRoleService customService,
             IJwtTokenGenerator jwtTokenGenerator,
             IMapper mapper)
         {
             _userManager = userManager;
+            _customService = customService;
             _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
@@ -60,11 +64,15 @@ namespace TaskTrackerX.AuthApi.Controllers
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId));
 
-            var result = await _userManager.FindByIdAsync(userId);
-            if (result == null)
+            var convertUserId = Guid.Parse(userId);
+
+            var userFind = await _customService
+                .GetQueryUsersWithRoles()
+                .FirstOrDefaultAsync(t => t.Id.Equals(convertUserId));
+            if (userFind == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
 
-            return this.ToApiResponse(_mapper.Map<UserDto>(result));
+            return this.ToApiResponse(_mapper.Map<UserDto>(userFind));
         }
 
         [HttpPost("change-password")]

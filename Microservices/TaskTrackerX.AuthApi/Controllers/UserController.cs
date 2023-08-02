@@ -88,12 +88,12 @@ namespace TaskTrackerX.AuthApi.Controllers
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUser(string userId, [FromBody] UpdateUserDto updateUserDto)
         {
             if (updateUserDto == null)
                 throw new ArgumentNullException(nameof(updateUserDto));
 
-            var userUpdate = await _userManager.FindByIdAsync(id);
+            var userUpdate = await _userManager.FindByIdAsync(userId);
             if (userUpdate == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
 
@@ -106,15 +106,15 @@ namespace TaskTrackerX.AuthApi.Controllers
             var updateResult = await _userManager.UpdateAsync(userUpdate);
 
             return updateResult.Succeeded ?
-                this.ToApiResponse(_mapper.Map<UserDto>(userUpdate)) :
+                await GetUserById(Guid.Parse(userId)) :
                 this.ToApiResponseError(errors: updateResult.Errors.ConvertToErrorInfo());
         }
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(string userId)
         {
-            var userDelete = await _userManager.FindByIdAsync(id);
+            var userDelete = await _userManager.FindByIdAsync(userId);
             if (userDelete == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
 

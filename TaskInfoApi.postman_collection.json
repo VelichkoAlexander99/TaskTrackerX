@@ -206,7 +206,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URl_TaskApi}}/api/exercise?ExerciseStatusId&CreatedByUserId&AssignedToUserId",
+							"raw": "{{URl_TaskApi}}/api/exercise",
 							"host": [
 								"{{URl_TaskApi}}"
 							],
@@ -217,25 +217,28 @@
 							"query": [
 								{
 									"key": "PageNumber",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "PageSize",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "ExerciseStatusId",
-									"value": null
+									"value": null,
+									"disabled": true
 								},
 								{
 									"key": "CreatedByUserId",
-									"value": null
+									"value": null,
+									"disabled": true
 								},
 								{
 									"key": "AssignedToUserId",
-									"value": null
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -470,7 +473,7 @@
 	"variable": [
 		{
 			"key": "statusId",
-			"value": "c8b0cc95-3d8e-4703-9b9e-ad2d80d57210"
+			"value": "1c5ba243-6bda-4658-82b3-689ccd5d16f6"
 		},
 		{
 			"key": "exerciseId",
