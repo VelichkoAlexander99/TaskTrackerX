@@ -32,7 +32,7 @@ namespace TaskTrackerX.TaskApi.Validator.ExerciseValidator
             await ValidateSubject(exercise, errors);
             await ValidateReceivedDateAndDeadline(exercise, errors);
             await ValidateExerciseStatus(exercise, errors);
-            //await ValidateAssignedToUser(exercise, errors);
+            await ValidateAssignedToUser(exercise, errors);
 
             if (errors.Count > 0)
                 return Result.Failed(errors.ToArray());
@@ -92,7 +92,7 @@ namespace TaskTrackerX.TaskApi.Validator.ExerciseValidator
         private async Task ValidateAssignedToUser(Exercise exercise, List<ErrorInfo> errors)
         {
             var user = await _userService.FindByIdAsync(exercise.AssignedToUserId);
-            if (user == null)
+            if (user.HasErrors)
                 errors.Add(ErrorDescriber.InvalidUser());
         }
     }

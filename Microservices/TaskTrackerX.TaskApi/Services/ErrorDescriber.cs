@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Identity;
 using System.Data;
 using System.Resources;
 using TaskTrackerX.TaskApi.Models;
@@ -13,6 +14,15 @@ namespace TaskTrackerX.TaskApi.Services
             {
                 Code = nameof(DefaultError),
                 Description = "Access denied"
+            };
+        }
+
+        public static ErrorInfo ServerNotResponding(string name)
+        {
+            return new ErrorInfo
+            {
+                Code = nameof(ServerNotResponding),
+                Description = $"Server {name} not responding"
             };
         }
 

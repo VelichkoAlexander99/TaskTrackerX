@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using TaskTrackerX.TaskApi.DTOs.Outgoing;
 using TaskTrackerX.TaskApi.Models;
 using TaskTrackerX.TaskApi.Models.Options;
@@ -13,7 +14,7 @@ namespace TaskTrackerX.TaskApi.Services.UserService
         private readonly SettingOptions _settingOptions;
 
         public UserService(
-            IHttpClientFactory httpClientFactory, 
+            IHttpClientFactory httpClientFactory,
             IOptions<SettingOptions> settingOptions)
         {
             _httpClientFactory = httpClientFactory;
@@ -24,11 +25,25 @@ namespace TaskTrackerX.TaskApi.Services.UserService
         {
             var httpClient = _httpClientFactory.CreateClient(_settingOptions.AuthApi.ServiceName);
 
-            var response = await httpClient.GetAsync($"/api/product");
-            var apiContet = await response.Content.ReadAsStringAsync();
-            var resp = JsonConvert.DeserializeObject<ApiResponse<UserDto>>(apiContet);
+            HttpResponseMessage response = await httpClient.GetAsync($"api/users/{userId}");
 
-            return resp;
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse<UserDto>>(content);
+
+                if (apiResponse == null)
+                    throw new JsonException(nameof(apiResponse));
+
+                return apiResponse;
+            }
+
+            return new ApiResponse<UserDto>()
+            {
+                ErrorMessage = new ErrorInfo[] {
+                    ErrorDescriber.ServerNotResponding(_settingOptions.AuthApi.ServiceName
+                    )}
+            };
         }
     }
 }

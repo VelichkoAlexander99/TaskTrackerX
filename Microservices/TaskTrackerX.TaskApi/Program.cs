@@ -33,7 +33,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<BearerTokenMiddleware>();
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();

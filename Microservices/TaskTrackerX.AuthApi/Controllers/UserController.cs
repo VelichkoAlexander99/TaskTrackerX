@@ -55,7 +55,7 @@ namespace TaskTrackerX.AuthApi.Controllers
 
         [HttpGet("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetUserById(Guid userId)
+        public async Task<IActionResult> FindUserById(Guid userId)
         {
             var userFind = await _customService
                 .GetQueryUsersWithRoles()
@@ -106,7 +106,7 @@ namespace TaskTrackerX.AuthApi.Controllers
             var updateResult = await _userManager.UpdateAsync(userUpdate);
 
             return updateResult.Succeeded ?
-                await GetUserById(Guid.Parse(userId)) :
+                await FindUserById(Guid.Parse(userId)) :
                 this.ToApiResponseError(errors: updateResult.Errors.ConvertToErrorInfo());
         }
 

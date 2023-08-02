@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TaskTrackerX.TaskApi.Models.Options;
+using TaskTrackerX.TaskApi.Services;
 
 namespace TaskTrackerX.TaskApi.HostBuilders
 {
@@ -15,10 +16,12 @@ namespace TaskTrackerX.TaskApi.HostBuilders
             if (microservicesConfig == null)
                 throw new ArgumentNullException(nameof(microservicesConfig));
 
+            services.AddHttpContextAccessor();
+
             services.AddHttpClient(microservicesConfig.AuthApi.ServiceName, client =>
             {
                 client.BaseAddress = new Uri(microservicesConfig.AuthApi.BaseUrl);
-            });
+            }).AddHttpMessageHandler<BearerTokenHandler>();
         }
     }
 }
