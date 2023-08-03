@@ -142,5 +142,16 @@ namespace TaskTrackerX.TaskApi.Services
                 Description = $"The subject must contain a maximum of {maxLength} characters. Current {currentLength}"
             };
         }
+
+        internal static ErrorInfo InvalidUserArchival(string? userName)
+        {
+            return new ErrorInfo
+            {
+                Code = nameof(InvalidUserArchival),
+                Description = string.IsNullOrEmpty(userName) ?
+                    $"This user is disabled, you cannot interact with him" :
+                    $"This user {userName} is disabled, you cannot interact with him"
+            };
+        }
     }
 }

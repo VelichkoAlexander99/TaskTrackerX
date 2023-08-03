@@ -33,6 +33,7 @@ namespace TaskTrackerX.TaskApi.Validator.ExerciseValidator
             await ValidateReceivedDateAndDeadline(exercise, errors);
             await ValidateExerciseStatus(exercise, errors);
             await ValidateAssignedToUser(exercise, errors);
+            await ValidateCreatedToUser(exercise, errors);
 
             if (errors.Count > 0)
                 return Result.Failed(errors.ToArray());
@@ -94,6 +95,19 @@ namespace TaskTrackerX.TaskApi.Validator.ExerciseValidator
             var user = await _userService.FindByIdAsync(exercise.AssignedToUserId);
             if (user.HasErrors)
                 errors.Add(ErrorDescriber.InvalidUser());
+
+            if (user.Data != null && user.Data.IsArchival)
+                errors.Add(ErrorDescriber.InvalidUserArchival(user.Data.Name));
+        }
+
+        private async Task ValidateCreatedToUser(Exercise exercise, List<ErrorInfo> errors)
+        {
+            var user = await _userService.FindByIdAsync(exercise.CreatedByUserId);
+            if (user.HasErrors)
+                errors.Add(ErrorDescriber.InvalidUser());
+
+            if (user.Data != null && user.Data.IsArchival)
+                errors.Add(ErrorDescriber.InvalidUserArchival(user.Data.Name));
         }
     }
 }

@@ -98,7 +98,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"string\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Еще не приступил\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -135,7 +135,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"string\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Заморожен Тест\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -320,7 +320,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"description\": \"string\",\r\n  \"subject\": \"string\",\r\n  \"receivedDate\": \"2023-07-30T18:38:21.309Z\",\r\n  \"deadline\": \"2023-07-31T18:38:21.309Z\",\r\n  \"exerciseStatusId\": \"1c5ba243-6bda-4658-82b3-689ccd5d16f6\",\r\n  \"assignedToUserId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa1\"\r\n}",
+							"raw": "{\r\n  \"description\": \"string\",\r\n  \"subject\": \"string\",\r\n  \"receivedDate\": \"2023-07-30T18:38:21.309Z\",\r\n  \"deadline\": \"2023-07-31T18:38:21.309Z\",\r\n  \"exerciseStatusId\": \"1c5ba243-6bda-4658-82b3-689ccd5d16f6\",\r\n  \"assignedToUserId\": \"c7b6ce8d-8f01-4ad4-9082-e97db9ca0700\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -419,7 +419,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete exercise",
+					"name": "Transfer to exercise archive",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -473,11 +473,11 @@
 	"variable": [
 		{
 			"key": "statusId",
-			"value": "1c5ba243-6bda-4658-82b3-689ccd5d16f6"
+			"value": ""
 		},
 		{
 			"key": "exerciseId",
-			"value": "2cceb810-e3d5-410a-8b58-5aa57586ebf2"
+			"value": ""
 		}
 	]
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.ComponentModel;
@@ -174,13 +175,15 @@ namespace TaskTrackerX.TaskApi.Controllers
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        public async Task<IActionResult> TransferExerciseArchiveAsync(Guid id)
         {
             var exercise = await _exerciseManager.FindByIdAsync(id);
             if (exercise == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidExercise());
 
-            var deleteResult = await _exerciseManager.DeleteAsync(exercise);
+            exercise.IsArchival = true;
+
+            var deleteResult = await _exerciseManager.UpdateAsync(exercise);
 
             return deleteResult.Succeeded ?
                 this.ToApiResponse(true) :

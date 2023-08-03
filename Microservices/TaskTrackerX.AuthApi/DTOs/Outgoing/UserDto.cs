@@ -8,5 +8,6 @@ namespace TaskTrackerX.AuthApi.DTOs.Outgoing
         public string? Name { get; set; }
         public string? Login { get; set; }
         public IEnumerable<string>? Roles { get; set; }
+        public bool IsArchival { get; set; }
     }
 }
