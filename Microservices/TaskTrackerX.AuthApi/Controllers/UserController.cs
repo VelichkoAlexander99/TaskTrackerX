@@ -15,6 +15,7 @@ using TaskTrackerX.AuthApi.Models;
 using TaskTrackerX.AuthApi.Models.Options;
 using TaskTrackerX.AuthApi.Models.Query;
 using TaskTrackerX.AuthApi.Services;
+using TaskTrackerX.AuthApi.Services.Publisher.Factory;
 
 namespace TaskTrackerX.AuthApi.Controllers
 {
@@ -25,6 +26,7 @@ namespace TaskTrackerX.AuthApi.Controllers
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly UserWithRoleService _customService;
         private readonly UserManager<User> _userManager;
+        private readonly IRabbitMqPublisherFactory _publisherFactory;
         private readonly IOptions<SettingOptions> _options;
         private readonly IMapper _mapper;
 
@@ -32,12 +34,14 @@ namespace TaskTrackerX.AuthApi.Controllers
             UserWithRoleService customService,
             RoleManager<IdentityRole<Guid>> roleManager,
             UserManager<User> userManager,
+            IRabbitMqPublisherFactory publisherFactory,
             IOptions<SettingOptions> options,
             IMapper mapper)
         {
             _roleManager = roleManager;
             _customService = customService;
             _userManager = userManager;
+            _publisherFactory = publisherFactory;
             _options = options;
             _mapper = mapper;
         }
@@ -83,6 +87,8 @@ namespace TaskTrackerX.AuthApi.Controllers
             if (!roleUser.Succeeded)
                 return this.ToApiResponseError(errors: roleUser.Errors.ConvertToErrorInfo());
 
+            userCreated.RoleName = "User";
+
             return this.ToApiResponse(_mapper.Map<UserDto>(userCreated), 201);
         }
 
@@ -112,17 +118,22 @@ namespace TaskTrackerX.AuthApi.Controllers
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        public async Task<IActionResult> TransferUserArchive(string userId)
         {
-            var userDelete = await _userManager.FindByIdAsync(userId);
-            if (userDelete == null)
+            var userArchive = await _userManager.FindByIdAsync(userId);
+            if (userArchive == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
 
-            var deleteResult = await _userManager.DeleteAsync(userDelete);
+            userArchive.IsArchival = true;
 
-            return deleteResult.Succeeded ?
+            var updateResult = await _userManager.UpdateAsync(userArchive);
+
+            if (updateResult.Succeeded)
+                _publisherFactory.PublisherUserDelete(Guid.Parse(userId));
+
+            return updateResult.Succeeded ?
                 this.ToApiResponse(true) :
-                this.ToApiResponseError(errors: deleteResult.Errors.ConvertToErrorInfo());
+                this.ToApiResponseError(errors: updateResult.Errors.ConvertToErrorInfo());
         }
 
         [HttpPost("{userId}/set-role")]
@@ -142,7 +153,7 @@ namespace TaskTrackerX.AuthApi.Controllers
 
             var currentRoles = await _userManager.GetRolesAsync(userFind);
             await _userManager.RemoveFromRolesAsync(userFind, currentRoles);
-            
+
             var roleResult = await _userManager.AddToRoleAsync(userFind, roleFind.Name);
 
             return roleResult.Succeeded ?

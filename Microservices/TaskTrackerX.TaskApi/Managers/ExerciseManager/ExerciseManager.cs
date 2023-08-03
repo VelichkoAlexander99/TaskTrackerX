@@ -22,7 +22,7 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
 
         public async Task<PagedResult<Exercise>> GetListAsync(FilterOptions<Exercise> filterOptions)
         {
-            return await _exerciseStore.Exercise
+            return await _exerciseStore.Exercises
                 .GetPagedAsync(filterOptions);
         }
 
@@ -57,6 +57,11 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
                 throw new ArgumentNullException(nameof(exercise));
 
             return await _exerciseStore.DeleteAsync(exercise);
+        }
+
+        public Task<Result> ArchiveByUserId(Guid userId)
+        {
+            return _exerciseStore.ArchiveByUserId(userId);
         }
     }
 }

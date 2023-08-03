@@ -4,5 +4,7 @@
     {
         public string? Name { get; set; }
         public string? Login { get; set; }
+
+        public bool? VisibleArchival { get; set; }
     }
 }

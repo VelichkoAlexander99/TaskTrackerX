@@ -25,13 +25,14 @@ namespace TaskTrackerX.AuthApi.Services
                     userRole => userRole.RoleId,
                     role => role.Id,
                     (userRole, role) => new { User = userRole.User, RoleName = role.Name })
-                .GroupBy(x => new { x.User.Id, x.User.UserName, x.User.Name })
+                .GroupBy(x => new { x.User.Id, x.User.UserName, x.User.Name, x.User.IsArchival })
                 .Select(g => new User
                 {
                     Id = g.Key.Id,
                     UserName = g.Key.UserName,
                     Name = g.Key.Name,
-                    RoleName = g.Select(x => x.RoleName).FirstOrDefault()
+                    RoleName = g.Select(x => x.RoleName).FirstOrDefault(),
+                    IsArchival = g.Key.IsArchival
                 });
 
             return usersWithRoles;

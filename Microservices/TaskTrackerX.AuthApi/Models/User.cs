@@ -7,5 +7,7 @@ namespace TaskTrackerX.AuthApi.Models
         public string Name { get; set; } = default!;
 
         public string? RoleName { get; set; }
+
+        public bool IsArchival { get; set; } = false;
     }
 }

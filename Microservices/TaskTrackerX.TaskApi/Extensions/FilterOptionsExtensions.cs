@@ -34,6 +34,9 @@ namespace TaskTrackerX.TaskApi.Extensions
             if (parameters.AssignedToUserId.HasValue)
                 filterOptions.Filter = exercise => exercise.AssignedToUserId.Equals(parameters.AssignedToUserId.Value);
 
+            if (parameters.VisibleArchival.HasValue)
+                filterOptions.Filter = exercise => exercise.IsArchival == parameters.VisibleArchival.Value;
+
             filterOptions.SetPaging(parameters, options);
 
             return filterOptions;

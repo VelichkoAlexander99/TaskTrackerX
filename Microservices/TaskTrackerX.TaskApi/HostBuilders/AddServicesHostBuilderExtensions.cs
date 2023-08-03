@@ -3,6 +3,7 @@ using TaskTrackerX.TaskApi.Data.Stores.StatusStore;
 using TaskTrackerX.TaskApi.Managers.ExerciseManager;
 using TaskTrackerX.TaskApi.Managers.StatusManager;
 using TaskTrackerX.TaskApi.Services;
+using TaskTrackerX.TaskApi.Services.Subscriber;
 using TaskTrackerX.TaskApi.Services.UserService;
 using TaskTrackerX.TaskApi.Validator.ExerciseValidator;
 using TaskTrackerX.TaskApi.Validator.StatusValidator;
@@ -28,6 +29,7 @@ namespace TaskTrackerX.TaskApi.HostBuilders
             services.AddScoped<IStatusValidator, StatusValidator>();
             services.AddScoped<IExerciseValidator, ExerciseValidator>();
 
+            services.AddHostedService<RabbitMqSubscriberService>();
         }
     }
 }

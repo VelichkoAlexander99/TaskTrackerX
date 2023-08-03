@@ -20,6 +20,9 @@ namespace TaskTrackerX.AuthApi.Extensions
             if (!string.IsNullOrEmpty(parameters.Name))
                 filterOptions.Filter = status => status.Name.Contains(parameters.Name);
 
+            if (parameters.VisibleArchival.HasValue)
+                filterOptions.Filter = status => status.IsArchival == parameters.VisibleArchival.Value;
+
             filterOptions.SetPaging(parameters, options);
 
             return filterOptions;

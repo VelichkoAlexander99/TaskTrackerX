@@ -14,6 +14,7 @@ namespace TaskTrackerX.TaskApi.Data
         {
             modelBuilder.ApplyConfiguration(new ExerciseConfiguration());
             modelBuilder.ApplyConfiguration(new StatusConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
 

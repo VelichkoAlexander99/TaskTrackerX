@@ -12,5 +12,6 @@ namespace TaskTrackerX.TaskApi.Managers.ExerciseManager
         Task<Result> CreateAsync(Exercise exercise);
         Task<Result> UpdateAsync(Exercise exercise);
         Task<Result> DeleteAsync(Exercise exercise);
+        Task<Result> ArchiveByUserId(Guid userId);
     }
 }
