@@ -20,18 +20,15 @@ namespace TaskTrackerX.AuthApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly UserWithRoleService _customService;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
         public AuthController(
             UserManager<User> userManager,
-            UserWithRoleService customService,
             IJwtTokenGenerator jwtTokenGenerator,
             IMapper mapper)
         {
             _userManager = userManager;
-            _customService = customService;
             _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
@@ -66,8 +63,8 @@ namespace TaskTrackerX.AuthApi.Controllers
 
             var convertUserId = Guid.Parse(userId);
 
-            var userFind = await _customService
-                .GetQueryUsersWithRoles()
+            var userFind = await _userManager.Users
+                .Include(t => t.Roles)
                 .FirstOrDefaultAsync(t => t.Id.Equals(convertUserId));
             if (userFind == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());

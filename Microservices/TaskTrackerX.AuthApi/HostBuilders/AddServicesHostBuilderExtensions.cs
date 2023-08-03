@@ -12,7 +12,6 @@ namespace TaskTrackerX.AuthApi.HostBuilders
 
             services.AddScoped<IRabbitMqPublisherFactory, RabbitMqPublisherFactory>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-            services.AddScoped<UserWithRoleService>();
         }
     }
 }

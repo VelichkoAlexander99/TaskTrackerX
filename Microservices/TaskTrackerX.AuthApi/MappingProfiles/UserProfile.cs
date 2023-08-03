@@ -14,7 +14,8 @@ namespace TaskTrackerX.AuthApi.MappingProfiles
                 .ForMember(dest => dest.UserName, u => u.MapFrom(src => src.Login));
 
             CreateMap<User, UserDto>()
-                .ForMember(dest => dest.Login, u => u.MapFrom(src => src.UserName));
+                .ForMember(dest => dest.Login, u => u.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.Roles, u => u.MapFrom(src => src.Roles.Select(t => t.Name)));
         }
     }
 }

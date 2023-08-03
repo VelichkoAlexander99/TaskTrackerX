@@ -24,14 +24,12 @@ namespace TaskTrackerX.AuthApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-        private readonly UserWithRoleService _customService;
         private readonly UserManager<User> _userManager;
         private readonly IRabbitMqPublisherFactory _publisherFactory;
         private readonly IOptions<SettingOptions> _options;
         private readonly IMapper _mapper;
 
         public UserController(
-            UserWithRoleService customService,
             RoleManager<IdentityRole<Guid>> roleManager,
             UserManager<User> userManager,
             IRabbitMqPublisherFactory publisherFactory,
@@ -39,7 +37,6 @@ namespace TaskTrackerX.AuthApi.Controllers
             IMapper mapper)
         {
             _roleManager = roleManager;
-            _customService = customService;
             _userManager = userManager;
             _publisherFactory = publisherFactory;
             _options = options;
@@ -50,8 +47,8 @@ namespace TaskTrackerX.AuthApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers([FromQuery] UserParametersDto filterOptions)
         {
-            var listResult = await _customService
-                .GetQueryUsersWithRoles()
+            var listResult = await _userManager.Users
+                .Include(t => t.Roles)
                 .GetPagedAsync(filterOptions.ConvertToFilterOptions(_options));
 
             return this.ToApiResponse(_mapper.Map<PagedResult<UserDto>>(listResult));
@@ -61,8 +58,8 @@ namespace TaskTrackerX.AuthApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> FindUserById(Guid userId)
         {
-            var userFind = await _customService
-                .GetQueryUsersWithRoles()
+            var userFind = await _userManager.Users
+                .Include(t => t.Roles)
                 .FirstOrDefaultAsync(t => t.Id.Equals(userId));
             if (userFind == null)
                 return this.ToApiResponseError(errors: ErrorDescriber.InvalidUser());
@@ -86,8 +83,6 @@ namespace TaskTrackerX.AuthApi.Controllers
             var roleUser = await _userManager.AddToRoleAsync(userCreated, "User");
             if (!roleUser.Succeeded)
                 return this.ToApiResponseError(errors: roleUser.Errors.ConvertToErrorInfo());
-
-            userCreated.RoleName = "User";
 
             return this.ToApiResponse(_mapper.Map<UserDto>(userCreated), 201);
         }
@@ -127,7 +122,6 @@ namespace TaskTrackerX.AuthApi.Controllers
             userArchive.IsArchival = true;
 
             var updateResult = await _userManager.UpdateAsync(userArchive);
-
             if (updateResult.Succeeded)
                 _publisherFactory.PublisherUserDelete(Guid.Parse(userId));
 

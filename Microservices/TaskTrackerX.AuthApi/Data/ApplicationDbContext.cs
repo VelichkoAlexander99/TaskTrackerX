@@ -6,7 +6,8 @@ using TaskTrackerX.AuthApi.Models;
 
 namespace TaskTrackerX.AuthApi.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : 
+        IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, UserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -16,9 +17,13 @@ namespace TaskTrackerX.AuthApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder
-                .Entity<User>()
-                .Ignore(t => t.RoleName);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany()
+                .UsingEntity<UserRole>(
+                    ur => ur.HasOne(r => r.Role).WithMany().HasForeignKey(r => r.RoleId),
+                    ur => ur.HasOne(u => u.User).WithMany().HasForeignKey(u => u.UserId)
+                );
         }
 
         public static void EnsureRolesCreated(IServiceProvider context)

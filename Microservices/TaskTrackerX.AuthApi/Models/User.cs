@@ -6,8 +6,8 @@ namespace TaskTrackerX.AuthApi.Models
     {
         public string Name { get; set; } = default!;
 
-        public string? RoleName { get; set; }
-
         public bool IsArchival { get; set; } = false;
+
+        public virtual IEnumerable<IdentityRole<Guid>> Roles { get; set; } = new List<IdentityRole<Guid>>();
     }
 }
