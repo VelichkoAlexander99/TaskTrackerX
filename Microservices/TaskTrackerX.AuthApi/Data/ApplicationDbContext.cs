@@ -44,18 +44,15 @@ namespace TaskTrackerX.AuthApi.Data
 
             if (!userManager.Users.Any())
             {
-                // Создаем администратора
                 var adminUser = new User
                 {
                     Name = "Admitistrator",
                     UserName = "Admin"
                 };
 
-                // Создаем пользователя и указываем пароль
                 userManager.CreateAsync(adminUser, "Admin123456!")
                     .GetAwaiter().GetResult();
 
-                // Назначаем роль "Admin" пользователю
                 userManager.AddToRoleAsync(adminUser, "Admin")
                     .GetAwaiter().GetResult();
             }

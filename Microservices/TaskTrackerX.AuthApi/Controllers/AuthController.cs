@@ -44,6 +44,9 @@ namespace TaskTrackerX.AuthApi.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return this.ToApiResponseError(401, errors: ErrorDescriber.InvalidUserLoginOrPassword());
 
+            if (user.IsArchival)
+                return this.ToApiResponseError(errors: ErrorDescriber.InvalidUserArchival(user.Name));
+
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _jwtTokenGenerator.GenerateToken(user, roles);
 

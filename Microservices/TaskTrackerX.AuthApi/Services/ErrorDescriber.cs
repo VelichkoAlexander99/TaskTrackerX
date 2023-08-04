@@ -13,6 +13,17 @@ namespace TaskTrackerX.AuthApi.Services
             };
         }
 
+        public static ErrorInfo InvalidUserArchival(string? userName)
+        {
+            return new ErrorInfo
+            {
+                Code = nameof(InvalidUserArchival),
+                Description = string.IsNullOrEmpty(userName) ?
+                    $"This user is disabled, you cannot interact with him" :
+                    $"This user {userName} is disabled, you cannot interact with him"
+            };
+        }
+
         public static ErrorInfo InvalidUser()
         {
             return new ErrorInfo

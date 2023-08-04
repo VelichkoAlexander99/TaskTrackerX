@@ -143,7 +143,7 @@ namespace TaskTrackerX.TaskApi.Services
             };
         }
 
-        internal static ErrorInfo InvalidUserArchival(string? userName)
+        public static ErrorInfo InvalidUserArchival(string? userName)
         {
             return new ErrorInfo
             {
